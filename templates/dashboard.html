@@ -3,26 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LF Frota Veículo</title>
-    <link rel="stylesheet" href="../static/style.css">
+    <title>LF Frota Veículo - Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="icon" href="{{ url_for('static', filename='img/logo.png') }}">
 </head>
 <body>
 
     <div class="sidebar">
         <div class="sidebar-header">
-            <h2><img src="../static/img/logo.png" alt="Logo" class="titulo-logo"></h2>
-
+            <h2><img src="{{ url_for('static', filename='img/logo.png') }}" alt="Logo" class="titulo-logo"></h2>
         </div>
 
         <ul class="sidebar-menu">
-            <li><a href="#"><i class="icon">👤</i> Perfil</a></li>
-            <li><a href="#"><i class="icon">🚗</i> Veículo</a></li>
-            <li><a href="#"><i class="icon">🛠️</i> Manutenção</a></li>
-            <li><a href="#"><i class="icon">📊</i> Relatório</a></li>
-            <li><a href="#"><i class="icon">⚙️</i> Configurações</a></li>
+            <li><a href="{{ url_for('perfil') }}">👤 Perfil</a></li>
+            <li><a href="{{ url_for('veiculo') }}">🚗 Veículo</a></li>
+            <li><a href="{{ url_for('manutencao') }}">🛠️ Manutenção</a></li>
+            <li><a href="{{ url_for('relatorio') }}">📊 Relatório</a></li>
+            <li><a href="{{ url_for('configuracoes') }}">⚙️ Configurações</a></li>
         </ul>
     </div>
-     <div class="content">
+
+    <div class="content">
         <h1>DASHBOARD</h1>
         <p>Bem-vindo ao sistema de gestão de frotas.</p>
         <h2>📋 Resumo das Frotas</h2>
@@ -35,37 +36,19 @@
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td>Total de Veículos</td>
-                    <td>25</td>
-                </tr>
-                <tr>
-                    <td>Veículos Ativos</td>
-                    <td>20</td>
-                </tr>
-                <tr>
-                    <td>Veículos em Manutenção</td>
-                    <td>5</td>
-                </tr>
-                <tr>
-                    <td>Últimas Manutenções Realizadas</td>
-                    <td>12/10/2025 - Troca de óleo (Carro 08)</td>
-                </tr>
-                <tr>
-                    <td>Alerta / Próxima Manutenção</td>
-                    <td>20/10/2025 - Revisão preventiva (Carro 14)</td>
-                </tr>
-                <tr>
-                    <td>Resumo de Custos</td>
-                    <td>R$ 12.400,00 (Último mês)</td>
-                </tr>
+                <tr><td>Total de Veículos</td><td>25</td></tr>
+                <tr><td>Veículos Ativos</td><td>20</td></tr>
+                <tr><td>Veículos em Manutenção</td><td>5</td></tr>
+                <tr><td>Últimas Manutenções Realizadas</td><td>12/10/2025 - Troca de óleo (Carro 08)</td></tr>
+                <tr><td>Alerta / Próxima Manutenção</td><td>20/10/2025 - Revisão preventiva (Carro 14)</td></tr>
+                <tr><td>Resumo de Custos</td><td>R$ 12.400,00 (Último mês)</td></tr>
             </tbody>
         </table>
-        <footer>
-    <p>© 2025 Todos os direitos reservados — <strong>LF Frota Veículos</strong></p>
-</footer>
+    </div>
 
+    <footer>
+        <p>© 2025 Todos os direitos reservados — <strong>LF Frota Veículos</strong></p>
+    </footer>
 
-        
 </body>
 </html>

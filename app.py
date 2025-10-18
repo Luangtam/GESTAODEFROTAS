@@ -1,27 +1,37 @@
-from flask import Flask, render_template, redirect, url_for, request
+from flask import Flask, render_template, redirect, url_for
 
 app = Flask(__name__)
 
-# ====== ROTA DE LOGIN ======
-@app.route("/", methods=["GET", "POST"])
-@app.route("/login", methods=["GET", "POST"])
+# 🔹 Página de login
+@app.route('/')
 def login():
-    if request.method == "POST":
-        usuario = request.form["usuario"]
-        senha = request.form["senha"]
+    return render_template('login.html')
 
-        # Exemplo simples de login fixo (você pode trocar por validação no banco)
-        if usuario == "Dudinha" and senha == "123":
-            return redirect(url_for("dashboard"))
-        else:
-            return render_template("login.html", erro="Usuário ou senha inválidos")
-    return render_template("login.html")
-
-# ====== ROTA DO DASHBOARD ======
-@app.route("/dashboard")
+# 🔹 Dashboard principal
+@app.route('/dashboard')
 def dashboard():
-    return render_template("dashboard.html")
+    return render_template('dashboard.html')
 
-# ====== EXECUTAR SERVIDOR ======
-if __name__ == "__main__":
+# 🔹 Páginas do menu lateral
+@app.route('/perfil')
+def perfil():
+    return render_template('perfil.html')
+
+@app.route('/veiculo')
+def veiculo():
+    return render_template('veiculo.html')
+
+@app.route('/manutencao')
+def manutencao():
+    return render_template('manutencao.html')
+
+@app.route('/relatorio')
+def relatorio():
+    return render_template('relatorio.html')
+
+@app.route('/configuracoes')
+def configuracoes():
+    return render_template('configuracoes.html')
+
+if __name__ == '__main__':
     app.run(debug=True)
