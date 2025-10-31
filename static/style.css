@@ -11,6 +11,8 @@ body.login-page {
     background-size: contain; /* use cover se quiser preencher a tela inteira */
 }
 
+
+
 .login-container {
     position: absolute;
     top: 50%;
@@ -181,3 +183,35 @@ footer {
     font-family: Arial, sans-serif;
     letter-spacing: 0.5px;
 }
+
+ /* veículo */
+
+.veiculo-container {
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+/* Botão Cadastrar */
+.btn-login {
+    background-color: #044C3D;
+    border-color: #044C3D;
+    color: #fff;
+    font-weight: 600;
+    text-transform: uppercase;
+    transition: 0.3s;
+}
+
+.btn-login:hover {
+    background-color: #066452;
+    border-color: #066452;
+    color: #fff;
+}
+
+/* Inputs e selects do Bootstrap com foco personalizado */
+.form-control:focus,
+.form-select:focus,
+textarea:focus {
+    border-color: #044C3D;
+    box-shadow: 0 0 6px rgba(4,76,61,0.3);
+}
+

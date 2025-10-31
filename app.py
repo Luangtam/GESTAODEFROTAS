@@ -1,37 +1,51 @@
-from flask import Flask, render_template, redirect, url_for
+# app.py
+from flask import Flask
+from flask_login import LoginManager
+from controllers.login_controller import login_bp
+from controllers.dashboard_controller import dashboard_bp
+from controllers.veiculo_controller import veiculo_bp
+from controllers.manutencao_controller import manutencao_bp
+from controllers.perfil_controller import perfil_bp
+from controllers.relatorio_controller import relatorio_bp
+from controllers.configuracoes_controller import configuracoes_bp
+from models.user_loader import User
+from flask_sqlalchemy import SQLAlchemy
 
+# Cria a aplicação Flask
 app = Flask(__name__)
+app.secret_key = 'chave_secreta_segura_aqui_123'
 
-# 🔹 Página de login
-@app.route('/')
-def login():
-    return render_template('login.html')
+# Configura o gerenciador de login
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = 'login_bp.login'
 
-# 🔹 Dashboard principal
-@app.route('/dashboard')
-def dashboard():
-    return render_template('dashboard.html')
+# Função obrigatória para Flask-Login
+@login_manager.user_loader
+def load_user(user_id):
+    if user_id == "1":
+        return User(id=1, username="admin", senha="123")
+    return None
 
-# 🔹 Páginas do menu lateral
-@app.route('/perfil')
-def perfil():
-    return render_template('perfil.html')
+# Registro dos Blueprints
+app.register_blueprint(login_bp)
+app.register_blueprint(dashboard_bp)
+app.register_blueprint(veiculo_bp)
+app.register_blueprint(manutencao_bp)
+app.register_blueprint(perfil_bp)
+app.register_blueprint(relatorio_bp)
+app.register_blueprint(configuracoes_bp)
 
-@app.route('/veiculo')
-def veiculo():
-    return render_template('veiculo.html')
 
-@app.route('/manutencao')
-def manutencao():
-    return render_template('manutencao.html')
 
-@app.route('/relatorio')
-def relatorio():
-    return render_template('relatorio.html')
 
-@app.route('/configuracoes')
-def configuracoes():
-    return render_template('configuracoes.html')
+# Configuração do banco de dados MySQL
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:@localhost/frota_db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
+db = SQLAlchemy(app)
+
+
+# Roda o servidor
 if __name__ == '__main__':
     app.run(debug=True)
