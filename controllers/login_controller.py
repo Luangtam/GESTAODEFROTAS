@@ -1,6 +1,5 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 
-# Cria o blueprint
 login_bp = Blueprint('login_bp', __name__)
 
 # Rota de login
@@ -10,7 +9,7 @@ def login():
         usuario = request.form['usuario']
         senha = request.form['senha']
 
-        # Aqui você colocaria a lógica de autenticação
+        
         if usuario == "admin" and senha == "123":
             return redirect(url_for('dashboard_bp.dashboard'))
         else:

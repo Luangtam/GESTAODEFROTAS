@@ -1,7 +1,5 @@
-# controllers/veiculo_controller.py
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 
-# Cria o blueprint de Veículos
 veiculo_bp = Blueprint('veiculo_bp', __name__, url_prefix='/veiculo')
 
 @veiculo_bp.route('/', methods=['GET', 'POST'])
