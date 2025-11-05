@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Manutenções</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="p-4 bg-light">
+
+  <div class="container bg-white p-4 rounded shadow">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h2 class="m-0">📋 Lista de Manutenções</h2>
+      <div>
+        <a href="{{ url_for('dashboard') }}" class="btn btn-secondary me-2">🏠 Dashboard</a>
+        <a href="{{ url_for('cadastrar_manutencao') }}" class="btn btn-success">+ Nova Manutenção</a>
+      </div>
+    </div>
+
+    <table class="table table-striped table-hover align-middle">
+      <thead class="table-dark">
+        <tr>
+          <th>ID</th>
+          <th>Veículo</th>
+          <th>Tipo</th>
+          <th>Entrada</th>
+          <th>Saída</th>
+          <th>Status</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for m in manutencoes %}
+        <tr>
+          <td>{{ m.id }}</td>
+          <td>{{ m.veiculo }}</td>
+          <td>{{ m.tipo }}</td>
+          <td>{{ m.data_entrada.strftime('%d/%m/%Y') }}</td>
+          <td>{{ m.data_saida.strftime('%d/%m/%Y') if m.data_saida else '-' }}</td>
+          <td>{{ m.status or '-' }}</td>
+          <td>
+            <a href="{{ url_for('editar_manutencao', id=m.id) }}" class="btn btn-sm btn-warning">Editar</a>
+            <a href="{{ url_for('excluir_manutencao', id=m.id) }}" class="btn btn-sm btn-danger"
+               onclick="return confirm('Deseja realmente excluir esta manutenção?')">Excluir</a>
+          </td>
+        </tr>
+        {% else %}
+        <tr>
+          <td colspan="7" class="text-center text-muted">Nenhuma manutenção cadastrada.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+</body>
+</html>
