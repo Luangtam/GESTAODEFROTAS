@@ -1,51 +1,128 @@
-# app.py
-from flask import Flask
-from flask_login import LoginManager
-from controllers.login_controller import login_bp
-from controllers.dashboard_controller import dashboard_bp
-from controllers.veiculo_controller import veiculo_bp
-from controllers.manutencao_controller import manutencao_bp
-from controllers.perfil_controller import perfil_bp
-from controllers.relatorio_controller import relatorio_bp
-from controllers.configuracoes_controller import configuracoes_bp
-from models.user_loader import User
-from flask_sqlalchemy import SQLAlchemy
+from flask import Flask, render_template, request, redirect, url_for, session
+from exts import db
+from models.veiculo_model import Veiculo
 
-# Cria a aplicação Flask
 app = Flask(__name__)
-app.secret_key = 'chave_secreta_segura_aqui_123'
+app.secret_key = 'chave_super_secreta'
 
-# Configura o gerenciador de login
-login_manager = LoginManager()
-login_manager.init_app(app)
-login_manager.login_view = 'login_bp.login'
-
-# Função obrigatória para Flask-Login
-@login_manager.user_loader
-def load_user(user_id):
-    if user_id == "1":
-        return User(id=1, username="admin", senha="123")
-    return None
-
-# Registro dos Blueprints
-app.register_blueprint(login_bp)
-app.register_blueprint(dashboard_bp)
-app.register_blueprint(veiculo_bp)
-app.register_blueprint(manutencao_bp)
-app.register_blueprint(perfil_bp)
-app.register_blueprint(relatorio_bp)
-app.register_blueprint(configuracoes_bp)
-
-
-
-
-# Configuração do banco de dados MySQL
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:@localhost/frota_db'
+# 🔧 Configuração para conectar ao MySQL (XAMPP)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:@localhost/gestaofrotas'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-db = SQLAlchemy(app)
+db.init_app(app)
+
+# ========================
+# ROTA LOGIN (opcional)
+# ========================
+@app.route('/', methods=['GET', 'POST'])
+def login():
+    erro = None
+    if request.method == 'POST':
+        usuario = request.form['usuario']
+        senha = request.form['senha']
+
+        if usuario == 'admin' and senha == '123':
+            session['usuario'] = usuario
+            return redirect(url_for('dashboard'))
+        else:
+            erro = 'Usuário ou senha incorretos.'
+    return render_template('login.html', erro=erro)
+
+# ========================
+# DASHBOARD
+# ========================
+@app.route('/dashboard')
+def dashboard():
+    if 'usuario' not in session:
+        return redirect(url_for('login'))
+    return render_template('dashboard.html')
+
+# ========================
+# CADASTRAR VEÍCULO
+# ========================
+@app.route('/veiculo', methods=['GET', 'POST'])
+def veiculo():
+    if 'usuario' not in session:
+        return redirect(url_for('login'))
+
+    if request.method == 'POST':
+        novo = Veiculo(
+            placa=request.form['placa'],
+            marca=request.form['marca'],
+            modelo=request.form['modelo'],
+            ano=request.form['ano'],
+            cor=request.form['cor'],
+            renavam=request.form['renavam'],
+            chassi=request.form['chassi'],
+            combustivel=request.form['combustivel'],
+            km=request.form['km'],
+            situacao=request.form['situacao'],
+            data_aquisicao=request.form['data_aquisicao'],
+            observacoes=request.form['observacoes']
+        )
+        db.session.add(novo)
+        db.session.commit()
+        return redirect(url_for('listar_veiculos'))  # redireciona para a listagem
+
+    return render_template('cadastro_veiculos/veiculo.html')
+
+# ========================
+# LISTAR VEÍCULOS
+# ========================
+@app.route('/veiculos')
+def listar_veiculos():
+    if 'usuario' not in session:
+        return redirect(url_for('login'))
+
+    veiculos = Veiculo.query.all()
+    return render_template('cadastro_veiculos/veiculos.html', veiculos=veiculos)
 
 
-# Roda o servidor
+# ========================
+# EDITAR VEÍCULO
+# ========================
+@app.route('/editar/<int:id>', methods=['GET', 'POST'])
+def editar_veiculo(id):
+    veiculo = Veiculo.query.get_or_404(id)
+
+    if request.method == 'POST':
+        veiculo.placa = request.form['placa']
+        veiculo.marca = request.form['marca']
+        veiculo.modelo = request.form['modelo']
+        veiculo.ano = request.form['ano']
+        veiculo.km = request.form['km']
+        veiculo.situacao = request.form['situacao']
+
+        db.session.commit()
+        return redirect(url_for('listar_veiculos'))
+
+    return render_template('cadastro_veiculos/editar_veiculo.html', veiculo=veiculo)
+
+
+# ========================
+# EXCLUIR VEÍCULO
+# ========================
+@app.route('/excluir/<int:id>')
+def excluir_veiculo(id):
+    veiculo = Veiculo.query.get_or_404(id)
+    db.session.delete(veiculo)
+    db.session.commit()
+    return redirect(url_for('listar_veiculos'))
+
+
+
+# ========================
+# LOGOUT
+# ========================
+@app.route('/logout')
+def logout():
+    session.clear()
+    return redirect(url_for('login'))
+
+# ========================
+# EXECUÇÃO
+# ========================
 if __name__ == '__main__':
+    with app.app_context():
+        db.create_all()
     app.run(debug=True)
