@@ -65,7 +65,7 @@
         <textarea name="observacoes" class="form-control" rows="2">{{ manutencao.observacoes if manutencao else '' }}</textarea>
       </div>
 
-      <button type="submit" class="btn btn-primary">{{ 'Salvar Alterações' if manutencao else 'Cadastrar' }}</button>
+      <button type="submit" class="btn btn-primary" style="background-color: #044C3D; border-color: #044C3D;">{{ 'Salvar Alterações' if manutencao else 'Cadastrar' }}</button>
       <a href="{{ url_for('listar_manutencoes') }}" class="btn btn-secondary">Voltar</a>
     </form>
   </div>
